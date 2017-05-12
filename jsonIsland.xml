@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE island [
+        <!ELEMENT island (init|actions)*>
+        <!ELEMENT init (heading|men|budget|contracts|time)*>
+        <!ELEMENT heading (#PCDATA)>
+        <!ELEMENT men (#PCDATA)>
+        <!ELEMENT budget (#PCDATA)>
+        <!ELEMENT contracts (contract)*>
+        <!ELEMENT contract (amount|resource)*>
+        <!ELEMENT amount (#PCDATA)>
+        <!ELEMENT resource (amount|resource_name|condition)*>
+        <!ELEMENT time (#PCDATA)>
+        <!ELEMENT actions (action)*>
+        <!ELEMENT action (name|parameters|result)*>
+        <!ELEMENT name (#PCDATA)>
+        <!ELEMENT parameters (direction|resource_name|amount)*>
+        <!ELEMENT direction (#PCDATA)>
+        <!ELEMENT resource_name (#PCDATA)>
+        <!ELEMENT result (cost|extras)*>
+        <!ELEMENT cost (#PCDATA)>
+        <!ELEMENT extras (found|range|creeks|biomes|sites|report|resources|pois|amount|resource_name|altitude)*>
+        <!ELEMENT found (#PCDATA)>
+        <!ELEMENT range (#PCDATA)>
+        <!ELEMENT creeks (creek)*>
+        <!ELEMENT creek (#PCDATA)>
+        <!ELEMENT biomes (biome)*>
+        <!ELEMENT biome (#PCDATA)>
+        <!ATTLIST biome
+                percent CDATA #IMPLIED>
+        <!ELEMENT sites (site)*>
+        <!ELEMENT site (#PCDATA)>
+        <!ELEMENT report (biome)*>
+        <!ELEMENT resources (resource)*>
+        <!ELEMENT condition (#PCDATA)>
+        <!ELEMENT pois (poi)*>
+        <!ELEMENT poi (#PCDATA)>
+        <!ELEMENT altitude (#PCDATA)>
+        ]>
+
+<island>
+    <init>
+        <heading></heading>
+        <men></men>
+        <budget></budget>
+        <contracts>
+            <contract>
+                <amount></amount>
+                <resource></resource>
+            </contract>
+        </contracts>
+        <time></time>
+    </init>
+    <actions>
+        <action>
+            <name></name>
+            <parameters>
+                <direction></direction>
+                <resource_name></resource_name>
+                <amount></amount>
+            </parameters>
+            <result>
+                <cost></cost>
+                <extras>
+                    <found></found>
+                    <range></range>
+                    <creeks>
+                        <creek></creek>
+                    </creeks>
+                    <biomes>
+                        <biome></biome>
+                    </biomes>
+                    <sites>
+                        <site></site>
+                    </sites>
+                    <report>
+                        <biome percent=""></biome>
+                    </report>
+                    <resources>
+                        <resource>
+                            <amount></amount>
+                            <resource_name></resource_name>
+                            <condition></condition>
+                        </resource>
+                    </resources>
+                    <pois>
+                        <poi></poi>
+                    </pois>
+                    <amount></amount>
+                    <resource_name></resource_name>
+                    <altitude></altitude>
+                </extras>
+            </result>
+        </action>
+    </actions>
+</island>
