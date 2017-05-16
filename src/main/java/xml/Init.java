@@ -12,7 +12,6 @@ public class Init implements MyNode {
     }
 
     @Override
-
     public String getName() {
         return name;
     }

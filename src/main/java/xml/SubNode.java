@@ -7,11 +7,15 @@ import java.util.Map;
  */
 public class SubNode implements MyNode {
     private String name;
-    private Map<String, Object> content;
+    public Map<String, Object> content;
 
     public SubNode(String name, Map<String, Object> content) {
         this.name = name;
         this.content = content;
+    }
+
+    public Map<String, Object> getContent() {
+        return content;
     }
 
     @Override
