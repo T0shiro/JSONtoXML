@@ -47,7 +47,8 @@ public class JSONParser {
     public static void main(String[] args) {
         JSONParser jsonParser = new JSONParser("jsonIADA.json");
         jsonParser.parse();
-        System.out.println(jsonParser.listNode);
+        ToXML toXML = new ToXML();
+        toXML.translate(jsonParser.listNode,"ol");
     }
 
     public void parse() {
@@ -66,12 +67,13 @@ public class JSONParser {
             Map<String, Object> actionContent  = new HashMap<>();
             data = action.getJSONObject("data");
             actionContent.put("action", data.get("action"));
+            Map<String, Object> parametersContent = new HashMap<>();
             if (action.has("parameters")) {
-                actionContent.put("parameters", parseActionParameters(data.getJSONObject("parameters")));
+                parametersContent = parseActionParameters(data.getJSONObject("parameters"));
             }
             JSONObject result = island.getJSONObject(i + 1);
-            actionContent.put("result", parseResult(result.getJSONObject("data")));
-            listNode.add(new SubNode("action", actionContent));
+            JSONObject dataAction = result.getJSONObject("data");
+            listNode.add(new Action("action",dataAction.getInt("cost"), parseExtras(result.getJSONObject("data")), parametersContent));
         }
     }
 
@@ -90,19 +92,17 @@ public class JSONParser {
         return new SubNode("contracts", contentContracts);
     }
 
-    public SubNode parseActionParameters(JSONObject parameters) {
+    public HashMap<String, Object> parseActionParameters(JSONObject parameters) {
         HashMap<String, Object> contentParameters = new HashMap<>();
         Iterator iterator = parameters.keys();
         while (iterator.hasNext()) {
             String key = (String) iterator.next();
             contentParameters.put(key, parameters.get(key));
         }
-        return new SubNode("parameters", contentParameters);
+        return contentParameters;
     }
 
-    public SubNode parseResult(JSONObject result) {
-        HashMap<String, Object> contentResult = new HashMap<>();
-        contentResult.put("cost", result.get("cost"));
+    public HashMap<String, Object> parseExtras(JSONObject result) {
         JSONObject extras = result.getJSONObject("extras");
         HashMap<String, Object> extrasContent = new HashMap<>();
         Iterator iterator = extras.keys();
@@ -110,7 +110,6 @@ public class JSONParser {
             String key = (String) iterator.next();
             extrasContent.put(key, extras.get(key));
         }
-        contentResult.put("extras", new SubNode("extras", extrasContent));
-        return new SubNode("result", contentResult);
+        return extrasContent;
     }
 }

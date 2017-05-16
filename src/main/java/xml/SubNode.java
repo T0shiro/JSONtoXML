@@ -20,6 +20,6 @@ public class SubNode implements MyNode {
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 }
