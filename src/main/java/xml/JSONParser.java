@@ -1,21 +1,16 @@
 package xml;
 
+
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.Scanner;
+import java.util.*;
 
 /**
  * Created by user on 02/05/2017.
@@ -23,6 +18,8 @@ import java.util.Scanner;
 public class JSONParser {
     private JSONArray island;
     private Document document;
+
+    private List<MyNode> listNode;
 
     public JSONParser(String url) {
         File file = new File(url);
@@ -44,82 +41,76 @@ public class JSONParser {
         } catch (ParserConfigurationException e) {
             e.printStackTrace();
         }
-
+        listNode = new ArrayList<>();
     }
 
     public static void main(String[] args) {
         JSONParser jsonParser = new JSONParser("jsonIADA.json");
-        try {
-            jsonParser.parse();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        } catch (TransformerException e) {
-            e.printStackTrace();
-        }
+        jsonParser.parse();
+        System.out.println(jsonParser.listNode);
     }
 
-    public void parse() throws ParserConfigurationException, TransformerException {
+    public void parse() {
         JSONObject init = island.getJSONObject(0);
         JSONObject data = init.getJSONObject("data");
-        Element islandXML = document.createElement("island");
-        document.appendChild(islandXML);
-        Element initXML = document.createElement("init");
-        islandXML.appendChild(initXML);
-        initXML.appendChild(createXMLElement("heading", data));
-        initXML.appendChild(createXMLElement("men", data));
-        initXML.appendChild(createXMLElement("budget", data));
-        JSONArray contractsJSon = data.getJSONArray("contracts");
-        initXML.appendChild(parseContracts(contractsJSon));
-        initXML.appendChild(createXMLElement("time", init));
-        Element actions = document.createElement("actions");
-        islandXML.appendChild(actions);
-        for (int i = 1; i < island.length(); i++) {
-            Element action = document.createElement("action");
-            JSONObject jsonObject = island.getJSONObject(i);
-            data = jsonObject.getJSONObject("data");
-            analyze(data,action);
-            islandXML.appendChild(action);
-        }
-        TransformerFactory transformerFactory = TransformerFactory.newInstance();
-        Transformer transformer = transformerFactory.newTransformer();
-        transformer.transform(new DOMSource(document), new StreamResult(new File("salut.xml")));
+        Map<String, Object> content = new HashMap<>();
+        content.put("heading", data.get("heading"));
+        content.put("men", data.get("men"));
+        content.put("budget", data.get("budget"));
+        content.put("contracts", parseContracts(data.getJSONArray("contracts")));
+        content.put("time", init.get("time"));
+        listNode.add(new SubNode("init", content));
 
-        //Todo : FAIRE DES OBJETS
-
-    }
-
-    public void analyze(JSONObject obj, Element element) {
-        for (String keyName : obj.keySet()) {
-            Object subObj = obj.get(keyName);
-            if(keyName.equals("action")){
-                keyName="name";
+        for (int i = 1; i < island.length(); i += 2) {
+            JSONObject action = island.getJSONObject(i);
+            Map<String, Object> actionContent  = new HashMap<>();
+            data = action.getJSONObject("data");
+            actionContent.put("action", data.get("action"));
+            if (action.has("parameters")) {
+                actionContent.put("parameters", parseActionParameters(data.getJSONObject("parameters")));
             }
-            Element subElement = document.createElement(keyName);
-            element.appendChild(subElement);
-            if (subObj instanceof JSONObject) {
-                analyze((JSONObject) subObj, subElement);
-            } else {
-                element.setTextContent(subObj.toString());
-            }
+            JSONObject result = island.getJSONObject(i + 1);
+            actionContent.put("result", parseResult(result.getJSONObject("data")));
+            listNode.add(new SubNode("action", actionContent));
         }
     }
 
-    public Element parseContracts(JSONArray contracts) {
-        Element contractsXML = document.createElement("contracts");
+
+
+    public SubNode parseContracts(JSONArray contracts) {
+        HashMap<String, Object> contentContracts = new HashMap<>();
         for (int i = 0; i < contracts.length(); i++) {
+            HashMap<String, Object> contentContract = new HashMap<>();
             JSONObject contract = contracts.getJSONObject(i);
-            Element contractXML = document.createElement("contract");
-            contractXML.appendChild(createXMLElement("amount", contract));
-            contractXML.appendChild(createXMLElement("resource", contract));
-            contractsXML.appendChild(contractXML);
+            contentContract.put("amount", contract.get("amount"));
+            contentContract.put("resource", contract.get("resource"));
+            SubNode contractXML = new SubNode("contract", contentContract);
+            contentContracts.put("contract", contractXML);
         }
-        return contractsXML;
+        return new SubNode("contracts", contentContracts);
     }
 
-    public Element createXMLElement(String tagName, JSONObject jsonObject) {
-        Object value = jsonObject.get(tagName);
-        Element element = document.createElement(tagName);
-        element.setTextContent(value.toString());
-        return element;
+    public SubNode parseActionParameters(JSONObject parameters) {
+        HashMap<String, Object> contentParameters = new HashMap<>();
+        Iterator iterator = parameters.keys();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            contentParameters.put(key, parameters.get(key));
+        }
+        return new SubNode("parameters", contentParameters);
+    }
+
+    public SubNode parseResult(JSONObject result) {
+        HashMap<String, Object> contentResult = new HashMap<>();
+        contentResult.put("cost", result.get("cost"));
+        JSONObject extras = result.getJSONObject("extras");
+        HashMap<String, Object> extrasContent = new HashMap<>();
+        Iterator iterator = extras.keys();
+        while (iterator.hasNext()) {
+            String key = (String) iterator.next();
+            extrasContent.put(key, extras.get(key));
+        }
+        contentResult.put("extras", new SubNode("extras", extrasContent));
+        return new SubNode("result", contentResult);
     }
 }
