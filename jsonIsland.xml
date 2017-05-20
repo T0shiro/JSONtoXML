@@ -8,21 +8,21 @@
         <!ELEMENT men (#PCDATA)>
         <!ELEMENT budget (#PCDATA)>
         <!ELEMENT contracts (contract)*>
-        <!ELEMENT contract (amount|resource)*>
+        <!ELEMENT contract (amount|resource_name)*>
         <!ELEMENT amount (#PCDATA)>
-        <!ELEMENT resource (amount|resource_name|condition)*>
+        <!ELEMENT resource_name (#PCDATA)>
         <!ELEMENT time (#PCDATA)>
         <!ELEMENT actions (action)*>
-        <!ELEMENT action (name|parameters|result)*>
+        <!ELEMENT action (name|cost|parameters|result)*>
         <!ELEMENT name (#PCDATA)>
-        <!ELEMENT parameters (direction|resource|amount|creek|people|range)*>
+        <!ELEMENT cost (#PCDATA)>
+        <!ELEMENT parameters (resource_name|direction|resource|amount|creek|people|range)*>
         <!ELEMENT direction (#PCDATA)>
+        <!ELEMENT resource (amount|resource_name|condition|altitude)*>
         <!ELEMENT creek (#PCDATA)>
         <!ELEMENT people (#PCDATA)>
         <!ELEMENT range (#PCDATA)>
-        <!ELEMENT result (cost|extras)*>
-        <!ELEMENT cost (#PCDATA)>
-        <!ELEMENT extras (found|range|creeks|biomes|sites|report|resources|pois|amount|resource_name|altitude)*>
+        <!ELEMENT result (found|range|amount|creeks|biomes|sites|report|resources|pois|production|kind)*>
         <!ELEMENT found (#PCDATA)>
         <!ELEMENT creeks (creek)*>
         <!ELEMENT biomes (biome)*>
@@ -31,13 +31,15 @@
                 percent CDATA #IMPLIED>
         <!ELEMENT sites (site)*>
         <!ELEMENT site (#PCDATA)>
-        <!ELEMENT report (biome)*>
+        <!ELEMENT report (cell)*>
+        <!ELEMENT cell (biome)*>
         <!ELEMENT resources (resource)*>
-        <!ELEMENT resource_name (#PCDATA)>
         <!ELEMENT condition (#PCDATA)>
+        <!ELEMENT altitude (#PCDATA)>
         <!ELEMENT pois (poi)*>
         <!ELEMENT poi (#PCDATA)>
-        <!ELEMENT altitude (#PCDATA)>
+        <!ELEMENT production (#PCDATA)>
+        <!ELEMENT kind (#PCDATA)>
         ]>
 <island>
     <init>
@@ -47,7 +49,7 @@
         <contracts>
             <contract>
                 <amount></amount>
-                <resource></resource>
+                <resource_name></resource_name>
             </contract>
         </contracts>
         <time></time>
@@ -55,7 +57,9 @@
     <actions>
         <action>
             <name></name>
+            <cost></cost>
             <parameters>
+                <resource_name></resource_name>
                 <direction></direction>
                 <resource></resource>
                 <amount></amount>
@@ -64,36 +68,36 @@
                 <range></range>
             </parameters>
             <result>
-                <cost></cost>
-                <extras>
-                    <found></found>
-                    <range></range>
-                    <creeks>
-                        <creek></creek>
-                    </creeks>
-                    <biomes>
-                        <biome></biome>
-                    </biomes>
-                    <sites>
-                        <site></site>
-                    </sites>
-                    <report>
-                        <biome percent=""></biome>
-                    </report>
-                    <resources>
-                        <resource>
-                            <amount></amount>
-                            <resource_name></resource_name>
-                            <condition></condition>
-                        </resource>
-                    </resources>
-                    <pois>
-                        <poi></poi>
-                    </pois>
-                    <amount></amount>
-                    <resource_name></resource_name>
-                    <altitude></altitude>
-                </extras>
+                <found></found>
+                <range></range>
+                <amount></amount>
+                <creeks>
+                    <creek></creek>
+                </creeks>
+                <biomes>
+                    <biome></biome>
+                </biomes>
+                <sites>
+                    <site></site>
+                </sites>
+                <report>
+                    <cell>
+                    <biome percent=""></biome>
+                    </cell>
+                </report>
+                <resources>
+                    <resource>
+                        <amount></amount>
+                        <resource_name></resource_name>
+                        <condition></condition>
+                        <altitude></altitude>
+                    </resource>
+                </resources>
+                <pois>
+                    <poi></poi>
+                </pois>
+                <production></production>
+                <kind></kind>
             </result>
         </action>
     </actions>

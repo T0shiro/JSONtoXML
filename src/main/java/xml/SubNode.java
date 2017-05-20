@@ -8,7 +8,11 @@ import java.util.Map;
 public class SubNode implements MyNode {
     private String name;
     public Map<String, Object> content;
-
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+    
     public SubNode(String name, Map<String, Object> content) {
         this.name = name;
         this.content = content;
