@@ -11,6 +11,11 @@ public class Analyser {
     public Analyser() {
     }
     
+    /**
+     * Cette fonction permet de séparer les actions par leur type et renvoie une Liste de liste d'actions
+     * @param actions
+     * @return
+     */
     public List<List<Action>> separateByType(List<Action> actions) {
         List<List<Action>> actionsList = actions.stream()
                 .collect(Collectors.groupingBy(x -> x.getName()))
@@ -24,7 +29,12 @@ public class Analyser {
         return actionsList;
     }
     
-    public double mean(List<Action> actions) {
+    /**
+     * fonction qui calcule la moyenne du cout d'une liste d'action
+     * @param actions
+     * @return
+     */
+    public double meanCost(List<Action> actions) {
         double cost = 0;
         for (Action action : actions) {
             cost += action.getCost();
@@ -32,8 +42,13 @@ public class Analyser {
         return cost / actions.size();
     }
     
-    public double deviation(List<Action> actions) {
-        double mean = mean(actions);
+    /**
+     * fonction qui calcule l'écart type du coup d'une liste d'actions
+     * @param actions
+     * @return
+     */
+    public double deviationCost(List<Action> actions) {
+        double mean = meanCost(actions);
         double deviation = 0;
         for (Action action : actions) {
             deviation += Math.pow((action.getCost() - mean), 2);
