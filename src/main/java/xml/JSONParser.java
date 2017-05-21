@@ -4,8 +4,8 @@ package xml;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.*;
-import java.nio.file.Files;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.*;
 
 /**
@@ -22,7 +22,7 @@ public class JSONParser {
     public JSONParser(String url) {
         File file = new File(url);
         StringBuilder data = new StringBuilder();
-//        new BufferedReader();
+        //        new BufferedReader();
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
@@ -33,6 +33,7 @@ public class JSONParser {
         }
         island = new JSONArray(data.toString());
     }
+    
     /**
      * Fonction qui analyse le fichier et renvoie une liste de MyNode
      * d'abord analyse init puis analyse les actions une par une
@@ -125,6 +126,7 @@ public class JSONParser {
     /**
      * Analyse un tableau Json et renvoie une Liste qui contient tous le contennu de l'array JSON
      * fonction recursive si l'array contient un array
+     *
      * @param jsonArray
      * @param name
      * @return
@@ -143,9 +145,11 @@ public class JSONParser {
         }
         return allArray;
     }
+    
     /**
      * Analyse un objet Json et renvoie un MySbNode qui contient tous le contennu de l'objet JSON
      * fonction recursive si l'objet contient un autre objet
+     *
      * @param jsonObject
      * @param name
      * @return
