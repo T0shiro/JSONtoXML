@@ -59,8 +59,7 @@ public class JSONParser {
         content.put("men", data.get("men"));
         content.put("budget", data.get("budget"));
         content.put("contracts", parseContracts(data.getJSONArray("contracts")));
-        content.put("time", init.get("time"));
-        listNode.add(new SubNode("init", content));
+        listNode.add(new MySubNode("init", content));
         
         for (int i = 1; i < island.length(); i += 2) {
             JSONObject action = island.getJSONObject(i);
@@ -78,17 +77,17 @@ public class JSONParser {
     }
     
     
-    public SubNode parseContracts(JSONArray contracts) {
+    public MySubNode parseContracts(JSONArray contracts) {
         HashMap<String, Object> contentContracts = new HashMap<>();
         for (int i = 0; i < contracts.length(); i++) {
             HashMap<String, Object> contentContract = new HashMap<>();
             JSONObject contract = contracts.getJSONObject(i);
             contentContract.put("amount", contract.get("amount"));
             contentContract.put("resource", contract.get("resource"));
-            SubNode contractXML = new SubNode("contract", contentContract);
+            MySubNode contractXML = new MySubNode("contract", contentContract);
             contentContracts.put("contract", contractXML);
         }
-        return new SubNode("contracts", contentContracts);
+        return new MySubNode("contracts", contentContracts);
     }
     
     public HashMap<String, Object> parseActionParameters(JSONObject parameters) {
@@ -131,7 +130,7 @@ public class JSONParser {
         return allArray;
     }
     
-    private SubNode parseObject(JSONObject jsonObject, String name) {
+    private MySubNode parseObject(JSONObject jsonObject, String name) {
         Map<String, Object> content = new HashMap<>();
         Iterator<String> iterator = jsonObject.keys();
         while (iterator.hasNext()) {
@@ -142,7 +141,7 @@ public class JSONParser {
                 content.put(key, jsonObject.get(key).toString());
             }
         }
-        return new SubNode(name, content);
+        return new MySubNode(name, content);
         
     }
     

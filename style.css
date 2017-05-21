@@ -1,0 +1,34 @@
+action {
+    display: block;
+    margin: 2%;
+    background: #24a1ff;
+    color: white;
+}
+init{
+    display: block;
+    margin: 2%;
+    background: #24a1ff;
+    color: white;
+}
+init *{
+    display: block;
+    margin-left: 2%;
+}
+name{
+    text-align: center;
+    margin-right: 2%;
+    font-size: x-large ;
+    font-weight: bold ;
+    background: #2479d3;
+}
+action * {
+    display: block;
+    margin-left: 2%;
+}
+
+cost:before {
+    content: "Coût: ";
+}
+parameters:before{
+    content: "Paramètres:";
+}

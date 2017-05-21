@@ -5,7 +5,7 @@ import java.util.Map;
 /**
  * Created by user on 16/05/2017.
  */
-public class SubNode implements MyNode {
+public class MySubNode implements MyNode {
     private String name;
     public Map<String, Object> content;
     
@@ -13,7 +13,7 @@ public class SubNode implements MyNode {
         this.name = name;
     }
     
-    public SubNode(String name, Map<String, Object> content) {
+    public MySubNode(String name, Map<String, Object> content) {
         this.name = name;
         this.content = content;
     }

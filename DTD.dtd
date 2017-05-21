@@ -1,5 +1,5 @@
 <!ELEMENT island (init|actions)*>
-        <!ELEMENT init (heading|men|budget|contracts|time)*>
+        <!ELEMENT init (heading|men|budget|contracts)*>
         <!ELEMENT heading (#PCDATA)>
         <!ELEMENT men (#PCDATA)>
         <!ELEMENT budget (#PCDATA)>
@@ -7,7 +7,6 @@
         <!ELEMENT contract (amount|resource_name)*>
         <!ELEMENT amount (#PCDATA)>
         <!ELEMENT resource_name (#PCDATA)>
-        <!ELEMENT time (#PCDATA)>
         <!ELEMENT actions (action)*>
         <!ELEMENT action (name|cost|parameters|result)*>
         <!ELEMENT name (#PCDATA)>

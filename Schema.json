@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {},
+  "id": "http://example.com/example.json",
+  "items": {
+    "id": "/items",
+    "properties": {
+      "data": {
+        "id": "/items/properties/data",
+        "properties": {
+          "budget": {
+            "id": "/items/properties/data/properties/budget",
+            "type": "integer"
+          },
+          "contracts": {
+            "id": "/items/properties/data/properties/contracts",
+            "items": {
+              "id": "/items/properties/data/properties/contracts/items",
+              "properties": {
+                "amount": {
+                  "id": "/items/properties/data/properties/contracts/items/properties/amount",
+                  "type": "integer"
+                },
+                "resource": {
+                  "id": "/items/properties/data/properties/contracts/items/properties/resource",
+                  "type": "string"
+                }
+              },
+              "type": "object"
+            },
+            "type": "array"
+          },
+          "heading": {
+            "id": "/items/properties/data/properties/heading",
+            "type": "string"
+          },
+          "men": {
+            "id": "/items/properties/data/properties/men",
+            "type": "integer"
+          }
+        },
+        "type": "object"
+      },
+      "meth": {
+        "id": "/items/properties/meth",
+        "type": "string"
+      },
+      "part": {
+        "id": "/items/properties/part",
+        "type": "string"
+      },
+      "time": {
+        "id": "/items/properties/time",
+        "type": "integer"
+      }
+    },
+    "type": "object"
+  },
+  "type": "array"
+}

@@ -32,7 +32,7 @@ public class ToXML {
         }
         Element island = document.createElement("island");
         document.appendChild(island);
-        island.appendChild(translate((SubNode) nodes.get(0)));
+        island.appendChild(translate((MySubNode) nodes.get(0)));
         Element actions = document.createElement("actions");
         island.appendChild(actions);
         for (int i = 1; i < nodes.size(); i++) {
@@ -51,7 +51,7 @@ public class ToXML {
         DOMSource source = new DOMSource(document);
         StreamResult result = new StreamResult(new File("file.xml"));
         DOMImplementation domImpl = document.getImplementation();
-        DocumentType doctype = domImpl.createDocumentType("doctype", "island", "file.dtd");
+        DocumentType doctype = domImpl.createDocumentType("doctype", "island", "DTD.dtd");
         transformer.setOutputProperty(OutputKeys.DOCTYPE_PUBLIC, doctype.getPublicId());
         transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM, doctype.getSystemId());
         
@@ -75,15 +75,15 @@ public class ToXML {
         return element;
     }
     
-    private Element translate(SubNode subNode) {
-        return translate(subNode.content, subNode.getName());
+    private Element translate(MySubNode mySubNode) {
+        return translate(mySubNode.content, mySubNode.getName());
     }
     
     private Element translate(Map<String, Object> map, String name) {
         Element element = document.createElement(name);
         for (Map.Entry<String, Object> entry : map.entrySet()) {
-            if (entry.getValue() instanceof SubNode) {
-                element.appendChild(translate((SubNode) entry.getValue()));
+            if (entry.getValue() instanceof MySubNode) {
+                element.appendChild(translate((MySubNode) entry.getValue()));
             } else if (entry.getValue() instanceof List) {
                 element.appendChild(translate((List) entry.getValue(), entry.getKey()));
             } else {
@@ -116,8 +116,8 @@ public class ToXML {
             childName = "biome";
         }
         for (Object o : list) {
-            if (o instanceof SubNode) {
-                SubNode node = (SubNode) o;
+            if (o instanceof MySubNode) {
+                MySubNode node = (MySubNode) o;
                 node.setName(childName);
                 element.appendChild(translate(node));
             } else if (o instanceof List) {

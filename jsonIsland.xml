@@ -52,7 +52,6 @@
                 <resource_name></resource_name>
             </contract>
         </contracts>
-        <time></time>
     </init>
     <actions>
         <action>

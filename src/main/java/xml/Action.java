@@ -3,7 +3,7 @@ package xml;
 import java.util.Map;
 
 /**
- * Created by user on 16/05/2017.
+ * Classe représentant une action
  */
 public class Action implements MyNode {
     public String name;
