@@ -3,13 +3,9 @@ package xml;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 /**
@@ -17,41 +13,32 @@ import java.util.*;
  */
 public class JSONParser {
     private JSONArray island;
-    private Document document;
     
-    private List<MyNode> listNode;
-    
+    /**
+     * Constructeur de JSONParser, lit le fichier demandé puis crée le JSONObject racine du fichier
+     *
+     * @param url
+     */
     public JSONParser(String url) {
         File file = new File(url);
-        String data = "";
+        StringBuilder data = new StringBuilder();
+//        new BufferedReader();
         try {
             Scanner scanner = new Scanner(file);
             while (scanner.hasNextLine()) {
-                data += scanner.nextLine();
+                data.append(scanner.nextLine());
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        island = new JSONArray(data);
-        DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder documentBuilder;
-        try {
-            documentBuilder = documentBuilderFactory.newDocumentBuilder();
-            document = documentBuilder.newDocument();
-        } catch (ParserConfigurationException e) {
-            e.printStackTrace();
-        }
-        listNode = new ArrayList<>();
+        island = new JSONArray(data.toString());
     }
-    
-    public static void main(String[] args) {
-        JSONParser jsonParser = new JSONParser("jsonIADA.json");
-        jsonParser.parse();
-        ToXML toXML = new ToXML();
-        toXML.translateNodes(jsonParser.listNode, "ol");
-    }
-    
-    public void parse() {
+    /**
+     * Fonction qui analyse le fichier et renvoie une liste de MyNode
+     * d'abord analyse init puis analyse les actions une par une
+     */
+    public List<MyNode> parse() {
+        List<MyNode> listNode = new ArrayList<>();
         JSONObject init = island.getJSONObject(0);
         JSONObject data = init.getJSONObject("data");
         Map<String, Object> content = new HashMap<>();
@@ -60,7 +47,6 @@ public class JSONParser {
         content.put("budget", data.get("budget"));
         content.put("contracts", parseContracts(data.getJSONArray("contracts")));
         listNode.add(new MySubNode("init", content));
-        
         for (int i = 1; i < island.length(); i += 2) {
             JSONObject action = island.getJSONObject(i);
             Map<String, Object> actionContent = new HashMap<>();
@@ -74,9 +60,16 @@ public class JSONParser {
             JSONObject dataAction = result.getJSONObject("data");
             listNode.add(new Action(actionData.getString("action"), dataAction.getInt("cost"), parseExtras(result.getJSONObject("data")), parametersContent));
         }
+        
+        return listNode;
     }
     
-    
+    /**
+     * Fonction qui analyse les contrats et créé un mySubNode qui corresponds aux contrats
+     *
+     * @param contracts
+     * @return
+     */
     public MySubNode parseContracts(JSONArray contracts) {
         HashMap<String, Object> contentContracts = new HashMap<>();
         for (int i = 0; i < contracts.length(); i++) {
@@ -90,6 +83,13 @@ public class JSONParser {
         return new MySubNode("contracts", contentContracts);
     }
     
+    /**
+     * Fonction qui Analyse un JSONObject qui contient les paramètres d'une action et renvoie une HashMap des parametres
+     * qui sera ensuite intégrée dans le champ parameters d'une Action
+     *
+     * @param parameters
+     * @return
+     */
     public HashMap<String, Object> parseActionParameters(JSONObject parameters) {
         HashMap<String, Object> contentParameters = new HashMap<>();
         Iterator iterator = parameters.keys();
@@ -100,6 +100,13 @@ public class JSONParser {
         return contentParameters;
     }
     
+    /**
+     * Fonction qui Analyse un JSONObject qui contient le resultat d'une action et renvoie une HashMap des resultats
+     * qui sera ensuite intégrée dans le champ extras d'une Action
+     *
+     * @param result
+     * @return
+     */
     public HashMap<String, Object> parseExtras(JSONObject result) {
         JSONObject extras = result.getJSONObject("extras");
         HashMap<String, Object> extrasContent = new HashMap<>();
@@ -107,7 +114,7 @@ public class JSONParser {
         while (iterator.hasNext()) {
             String key = iterator.next();
             if (extras.get(key) instanceof JSONArray) {
-                extrasContent.put(key,parseArray((JSONArray) extras.get(key), key));
+                extrasContent.put(key, parseArray((JSONArray) extras.get(key), key));
             } else {
                 extrasContent.put(key, extras.get(key));
             }
@@ -115,6 +122,13 @@ public class JSONParser {
         return extrasContent;
     }
     
+    /**
+     * Analyse un tableau Json et renvoie une Liste qui contient tous le contennu de l'array JSON
+     * fonction recursive si l'array contient un array
+     * @param jsonArray
+     * @param name
+     * @return
+     */
     private List<Object> parseArray(JSONArray jsonArray, String name) {
         List<Object> allArray = new ArrayList<>();
         for (int i = 0; i < jsonArray.length(); i++) {
@@ -129,7 +143,13 @@ public class JSONParser {
         }
         return allArray;
     }
-    
+    /**
+     * Analyse un objet Json et renvoie un MySbNode qui contient tous le contennu de l'objet JSON
+     * fonction recursive si l'objet contient un autre objet
+     * @param jsonObject
+     * @param name
+     * @return
+     */
     private MySubNode parseObject(JSONObject jsonObject, String name) {
         Map<String, Object> content = new HashMap<>();
         Iterator<String> iterator = jsonObject.keys();

@@ -3,7 +3,8 @@ package xml;
 import java.util.Map;
 
 /**
- * Classe représentant une action
+ * Classe représentant une action similaire à MySubNode
+ * sauf qu'elle contient une map de extras et de parametres, extras correspondant au resultat de l'action
  */
 public class Action implements MyNode {
     public String name;
