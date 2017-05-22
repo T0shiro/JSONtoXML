@@ -62,7 +62,6 @@ public class ToXML {
         for (int i = 1; i < nodes.size(); i++) {
             actions.appendChild(translate((Action) nodes.get(i)));
         }
-        System.out.println(document);
         
         TransformerFactory transformerFactory = TransformerFactory.newInstance();
         Transformer transformer = null;
